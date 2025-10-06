@@ -1,0 +1,30 @@
+---
+- name: Setup snapd and test snap package
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install snapd package (apt or yum based on OS)
+      package:
+        name: snapd
+        state: latest
+
+    - name: Ensure snapd is started and enabled
+      systemd:
+        name: snapd
+        state: started
+        enabled: yes
+
+    - name: Install hello-world snap package
+      command: snap install hello-world
+      register: snap_install_result
+      ignore_errors: yes
+
+    - name: Run hello-world snap to verify installation
+      command: /snap/bin/hello-world
+      register: hello_world_result
+      ignore_errors: yes
+
+    - name: Show hello-world output
+      debug:
+        var: hello_world_result.stdout
