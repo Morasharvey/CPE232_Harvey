@@ -1,0 +1,33 @@
+---
+- name: Install Apache Web Server
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install apache2 on Ubuntu/Debian systems
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install httpd on RHEL/CentOS systems
+      yum:
+        name: httpd
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure Apache is started and enabled on Ubuntu/Debian
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure Apache is started and enabled on RHEL/CentOS
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+      when: ansible_os_family == "RedHat"
+
