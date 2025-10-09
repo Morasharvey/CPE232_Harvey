@@ -1,0 +1,12 @@
+---
+- name: Configure passwordless sudo for vboxuser
+  hosts: all
+  become: yes
+  tasks:
+    - name: Allow vboxuser passwordless sudo
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^vboxuser ALL=\(ALL\) NOPASSWD: ALL'
+        line: 'vboxuser ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'

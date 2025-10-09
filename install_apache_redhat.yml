@@ -1,0 +1,22 @@
+---
+- name: Install Apache HTTP Server and PHP on Red Hat OS
+  hosts: centos
+  become: yes
+
+  vars:
+    apache_package: httpd
+    php_package: php
+
+  tasks:
+    - name: Install Apache and PHP packages
+      package:
+        name:
+          - "{{ apache_package }}"
+          - "{{ php_package }}"
+        state: present
+
+    - name: Start and enable Apache service
+      systemd:
+        name: "{{ apache_package }}"
+        state: started
+        enabled: yes
